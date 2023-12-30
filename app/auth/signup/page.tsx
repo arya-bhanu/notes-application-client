@@ -52,6 +52,7 @@ const Signup = () => {
 				shadow={'lg'}
 				p={5}
 				rounded={'md'}
+				rowGap={5}
 			>
 				<Heading>Signup</Heading>
 				<FormControl isInvalid={Boolean(errors.username)}>

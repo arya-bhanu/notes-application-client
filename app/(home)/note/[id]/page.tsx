@@ -22,12 +22,21 @@ const NoteDetail = ({ params }: { params: { id: string } }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [error, data]);
 	return (
-		<Box pt={'7rem'}>
+		<Box pt={['6rem', '7rem', '8rem']}>
 			<GlobalContainer>
+				{loading && (
+					<Box
+						height={'60vh'}
+						width={'100%'}
+						display={'flex'}
+					>
+						<Heading m={'auto'}>Loading Note ...</Heading>
+					</Box>
+				)}
 				{data && data.getNote && !loading && !error && (
-					<Stack>
+					<Stack align={'center'}>
 						<Heading>{data.getNote.title}</Heading>
-						<Box>
+						<Box mt={[1, 2, 3]}>
 							<span>{parse(data.getNote.body)}</span>
 						</Box>
 					</Stack>

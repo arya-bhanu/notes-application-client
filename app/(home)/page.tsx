@@ -6,7 +6,7 @@ import NotesContainer from './(components)/notes-container';
 import { NoteType } from '@/types';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heading } from '@chakra-ui/react';
+import { Box, Heading } from '@chakra-ui/react';
 import { useAuthHeader } from '@/data';
 import helperAuth from '@/helper/auth.helper';
 export default function Home() {
@@ -23,7 +23,9 @@ export default function Home() {
 				{data && !loading && !error ? (
 					<NotesContainer notes={data.getAllNotes as NoteType[]} />
 				) : (
-					<Heading>Loading ...</Heading>
+					<Box height={'70vh'} width={'100%'} display={'flex'}>
+						<Heading m={'auto'}>Loading Notes ...</Heading>
+					</Box>
 				)}
 			</GlobalContainer>
 		</main>

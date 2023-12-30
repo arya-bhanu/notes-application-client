@@ -65,9 +65,11 @@ const Header = () => {
 							<Stack
 								direction={'row'}
 								alignItems={'center'}
-								columnGap={3}
+								columnGap={[0, 1, 2, 3]}
 							>
-								<Text>Helo, {username}</Text>
+								<Text display={{ base: 'none', md: 'block' }}>
+									Helo, {username}
+								</Text>
 								<IconButton
 									onClick={handleLogout}
 									aria-label="logout"
