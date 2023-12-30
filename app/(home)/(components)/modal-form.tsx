@@ -1,5 +1,7 @@
 import { POST_ADD_NEW_NOTE } from '@/http/_POST';
+import { UPDATE_NOTE } from '@/http/_PUT';
 import { IFormNote } from '@/interface/interface';
+import { NoteType } from '@/types';
 import { useMutation } from '@apollo/client';
 import {
 	Button,
@@ -23,9 +25,10 @@ import ReactQuill from 'react-quill';
 export type ModalFormProps = {
 	isUpdate: boolean;
 	isOpen: boolean;
-	initialRef: React.MutableRefObject<null>;
-	finalRef: React.MutableRefObject<null>;
+	initialRef?: React.MutableRefObject<null>;
+	finalRef?: React.MutableRefObject<null>;
 	onClose: () => void;
+	note?: NoteType;
 };
 
 const ModalForm: React.FC<ModalFormProps> = ({
@@ -34,10 +37,12 @@ const ModalForm: React.FC<ModalFormProps> = ({
 	isOpen,
 	onClose,
 	isUpdate,
+	note,
 }) => {
-	const [valueRichText, setValueRichText] = useState('');
-	const router = useRouter();
+	const [valueRichText, setValueRichText] = useState(note ? note.body : '');
 	const [addNote, { loading, data, error }] = useMutation(POST_ADD_NEW_NOTE);
+	const [updateNote, {}] = useMutation(UPDATE_NOTE);
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
@@ -45,14 +50,24 @@ const ModalForm: React.FC<ModalFormProps> = ({
 	} = useForm<IFormNote>();
 	const onSubmit: SubmitHandler<IFormNote> = async (data) => {
 		try {
-			const response = await addNote({
-				variables: { input: { title: data.title, body: valueRichText } },
-			});
+			if (isUpdate) {
+				const response = await updateNote({
+					variables: {
+						input: { noteId: note?.id, body: valueRichText, title: data.title },
+					},
+				});
+				console.log(response);
+			} else {
+				const response = await addNote({
+					variables: { input: { title: data.title, body: valueRichText } },
+				});
+				console.log(response);
+			}
 			onClose();
 			window.location.href = '/';
-			console.log(response);
 		} catch (err) {
 			console.error(err);
+			router.push('/auth/login');
 		}
 	};
 	function isQuillEmpty(value: string) {
@@ -83,6 +98,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
 							<FormLabel htmlFor="title">Title</FormLabel>
 							<Input
 								id="title"
+								defaultValue={note ? note.title : ''}
 								{...register('title', { required: 'Title is required' })}
 								placeholder="Note title"
 							/>

@@ -4,6 +4,7 @@ import { IFormUser } from '@/interface/interface';
 import { useMutation } from '@apollo/client';
 import {
 	Button,
+	ButtonGroup,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
@@ -33,7 +34,7 @@ const Signup = () => {
 					input: { password: data.password, username: data.username },
 				},
 			});
-			
+
 			router.push('/auth/login');
 		} catch (err) {
 			console.error(err);
@@ -48,6 +49,9 @@ const Signup = () => {
 			<Stack
 				maxW={'xl'}
 				mx={'auto'}
+				shadow={'lg'}
+				p={5}
+				rounded={'md'}
 			>
 				<Heading>Signup</Heading>
 				<FormControl isInvalid={Boolean(errors.username)}>
@@ -87,7 +91,10 @@ const Signup = () => {
 					/>
 					<FormErrorMessage>{errors.confirmPassword?.message}</FormErrorMessage>
 				</FormControl>
-				<Button type="submit">Signup</Button>
+				<ButtonGroup>
+					<Button type="submit">Signup</Button>
+					<Button onClick={() => router.push('/auth/login')}>Login</Button>
+				</ButtonGroup>
 			</Stack>
 		</form>
 	);

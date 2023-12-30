@@ -1,11 +1,13 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import GlobalContainer from './global-container';
-import { Flex, Heading, IconButton, Text } from '@chakra-ui/react';
+import { Flex, Heading, IconButton, Stack, Text } from '@chakra-ui/react';
 import { useAuthHeader } from '@/data';
 import { jwtDecode } from 'jwt-decode';
 import { IoIosLogOut } from 'react-icons/io';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const Header = () => {
 	const token = window.localStorage.getItem('token');
@@ -13,10 +15,14 @@ const Header = () => {
 	const router = useRouter();
 	const [username, setUsername] = useState<string | null>(null);
 	useEffect(() => {
-		if (authStore.isAuth) {
+		if (!token) {
+			router.push('/auth/login');
+		}
+		if (authStore.isAuth && token) {
 			const decoded = jwtDecode(token as string) as any;
 			setUsername(decoded.username);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore.isAuth, token]);
 	const handleLogout = () => {
 		window.localStorage.removeItem('token');
@@ -42,17 +48,32 @@ const Header = () => {
 					justify={'space-between'}
 					align={'center'}
 				>
-					<Heading margin={0}>Logo here</Heading>
+					<Link
+						href={'/'}
+						style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
+					>
+						<Image
+							alt="logo"
+							src={'/logo.png'}
+							width={50}
+							height={30}
+						/>
+						<Text fontSize={'1.1rem'}>Dibimbing Notes</Text>
+					</Link>
 					<Flex align={'center'}>
 						{username ? (
-							<>
+							<Stack
+								direction={'row'}
+								alignItems={'center'}
+								columnGap={3}
+							>
 								<Text>Helo, {username}</Text>
 								<IconButton
 									onClick={handleLogout}
 									aria-label="logout"
 									icon={<IoIosLogOut size={25} />}
 								/>
-							</>
+							</Stack>
 						) : (
 							<Text>Loading...</Text>
 						)}

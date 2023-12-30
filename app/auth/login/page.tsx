@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import {
 	Box,
 	Button,
+	ButtonGroup,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
@@ -34,7 +35,7 @@ const Login = () => {
 			});
 			const { data } = response;
 			window.localStorage.setItem('token', data.loginUser as string);
-			router.push('/');
+			window.location.href = '/';
 		} catch (err) {
 			console.error(err);
 			router.push('/auth/login');
@@ -48,6 +49,9 @@ const Login = () => {
 			<Stack
 				maxW={'xl'}
 				mx={'auto'}
+				shadow={'lg'}
+				p={5}
+				rounded={'md'}
 			>
 				<Heading>Login</Heading>
 				<FormControl isInvalid={Boolean(errors.username)}>
@@ -71,7 +75,16 @@ const Login = () => {
 					<FormErrorMessage>{errors.password?.message}</FormErrorMessage>
 				</FormControl>
 
-				<Button type="submit">Login</Button>
+				<ButtonGroup>
+					<Button type="submit">Login</Button>
+					<Button
+						onClick={() => {
+							router.push('/auth/signup');
+						}}
+					>
+						Signup
+					</Button>
+				</ButtonGroup>
 			</Stack>
 		</form>
 	);

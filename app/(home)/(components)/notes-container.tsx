@@ -1,8 +1,10 @@
 import React from 'react';
-import { Flex, SimpleGrid, Stack } from '@chakra-ui/react';
+import { Flex, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import AddNote from './add-note';
 import NoteCard from './note-card';
-const NotesContainer = () => {
+import { NoteType } from '@/types';
+
+const NotesContainer = ({ notes }: { notes: NoteType[] }) => {
 	return (
 		<Flex
 			w={'100%'}
@@ -12,21 +14,23 @@ const NotesContainer = () => {
 				m={'auto'}
 				alignItems={'center'}
 				w={'100%'}
-                rowGap={5}
+				rowGap={5}
 			>
-				<SimpleGrid
+				{notes.length === 0 ? <Text>Your notes is empty</Text>: <SimpleGrid
 					w={'100%'}
-					columns={[1,2, 3, 4, 5]}
+					columns={[1, 2, 3, 4, 5]}
 					gap={4}
 				>
-					<NoteCard />
-					<NoteCard />
-					<NoteCard />
-					<NoteCard />
-					<NoteCard />
-					<NoteCard />
-				</SimpleGrid>
-				{/* <Text>Your notes is empty</Text> */}
+					{notes.map((el, index) => {
+						return (
+							<NoteCard
+								key={el.id}
+								{...el}
+							/>
+						);
+					})}
+				</SimpleGrid>}
+				
 				<AddNote />
 			</Stack>
 		</Flex>
