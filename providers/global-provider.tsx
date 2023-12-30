@@ -11,8 +11,10 @@ import {
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
 
+const port = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000/graphql";
+
 const authLink = setContext((_, { headers }) => {
-	const token = localStorage.getItem('token'); 
+	const token = localStorage.getItem('token');
 	return {
 		headers: {
 			...headers,
@@ -27,11 +29,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 		});
 	}
 });
-const link = from([
-	errorLink,
-	authLink,
-	new HttpLink({ uri: 'http://localhost:5000/graphql' }),
-]);
+const link = from([errorLink, authLink, new HttpLink({ uri: port })]);
 const client = new ApolloClient({
 	link,
 	cache: new InMemoryCache(),
